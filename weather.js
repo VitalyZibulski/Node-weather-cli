@@ -29,8 +29,23 @@ const initClI = () => {
     if (args.t) {
         return saveToken(args.t); 
     }
+    
+    getForcast();
+}
 
-    getWeather('molodechno');
+const getForcast = async () => {
+    try {
+        const weather = await getWeather(process.env.CITY);
+        console.log(weather);
+    } catch (e) {
+        if (e?.response?.status == 404) {
+            printError('Wrong city');
+        } else if (e?.response?.status == 401) {
+            printError('Wrong token');
+        } else {
+            printError(e.message);
+        }
+    }
 }
 
 initClI();
